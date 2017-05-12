@@ -1,0 +1,17 @@
+{
+  "name": "datastore",
+  "version": "0.0.1",
+  "description": "This is a central api to store all events from the Foundery",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "pg": "^6.1.5"
+  }
+}

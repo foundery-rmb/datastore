@@ -1,8 +1,6 @@
-FROM node:7.10-alpine
+FROM node:8.1.0-alpine
 
 EXPOSE 8080
-
-#mkdir /app
 
 WORKDIR /app
 

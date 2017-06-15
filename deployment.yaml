@@ -23,7 +23,7 @@ spec:
             - containerPort: 5432
         - name: datastore
           image: nexus.foundery.club/foundery/datastore:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
 

@@ -2,12 +2,19 @@ var express = require('express');
 var pg = require('pg');
 var app = express();
 var bodyParser =  require('body-parser');
+var morgan = require('morgan');
+var auth = require('http-auth');
 var port = process.env.NODE_PORT | 8080;
+var basic = auth.basic({
+	realm: "Data Science.",
+	file: ".htpasswd"
+});
 
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 app.get('/', function(req,res) {
-	res.send("Welcome to the Foundery datastore api, post to /event to store your event");
+	res.send("Welcome to the Foundery Datastore API, post to /event to store your event.");
 });
 
 
@@ -30,10 +37,10 @@ pool.connect(function (err, client) {
 
 	client.query('CREATE DATABASE datastore', function (err, result) {
 		if (err) {
-			console.log('db exists');
+			console.log('Database exists...');
 			return;
 		}
-		console.log('database created');
+		console.log('Database created...');
 		client.end(function (err) {
 			if (err) throw err;
 		});
@@ -41,10 +48,10 @@ pool.connect(function (err, client) {
 
 	client.query('CREATE TABLE events (source TEXT, event TEXT, created TIMESTAMP, data JSONB)', function (err, result) {
 		if (err) {
-			console.log('table exist');
+			console.log('Table exists...');
 			return;
 		}
-		console.log('table created');
+		console.log('Table created...');
 		client.end(function (err) {
 			if (err) throw err;
 		});
@@ -55,10 +62,10 @@ pool.connect(function (err, client) {
 
 
 //log this into a postgres 
-app.post('/event', function (req, res) {
+app.post('/event', auth.connect(basic), function (req, res) {
 	var body = req.body;
 	res.setHeader('Content-Type', 'application/json');
-	console.log(body.source);
+	console.log("Event received from " + body.source + " of type " + body.event + " at " + new Date() + ".");
 	pool.connect(function (err, client) {
 		if (err) throw err;
 		client.query('INSERT INTO events (source, event, created, data) VALUES ($1, $2, $3, $4)',
@@ -74,5 +81,5 @@ app.post('/event', function (req, res) {
 });
 
 app.listen(port, function () {
-  console.log(`Example app listening on port ${port}!`)
+  console.log('Node server listening on port ${port}.')
 });

@@ -10,4 +10,6 @@ RUN npm --unsafe-perm install
 
 COPY server.js ./server.js
 
+COPY .htpasswd ./.htpasswd
+
 CMD node server.js
